@@ -11,10 +11,12 @@ public class SongPlaylist {
     }
 
     public void addSong(Song song) {
+        //adds to root if tree is empty
         if (root == null) {
             this.root = song;
         }
         else {
+            //traverses starting from root, continues until node is added
             Song pos = root;
             while (true) {
                 pos.checkArtist(song);
@@ -36,7 +38,8 @@ public class SongPlaylist {
                 else if (song.compareTo(pos) > 0){
                     pos = pos.getRight();
                 }
-                //handles duplicates so they are not added more than once.
+                //handles duplicates so they are not added more than once
+                //if a duplicate is found, streams are added to calculate average streams of song
                 else if (song.compareTo(pos) == 0) {
                     pos.addStreams(song.getSongStreams());
                     break;
@@ -45,10 +48,13 @@ public class SongPlaylist {
         }
     }
 
+    //method to traverse tree and print subtree of within start and end key
     public String subSet(String start, String end) {
         return subSet(root, start, end);
     }
+    //recursive helper function for subset
     private String subSet(Song pos, String start, String end) {
+        //base case
         if (pos == null) {
             return "";
         }
@@ -59,6 +65,7 @@ public class SongPlaylist {
          else if (pos.getSongName().compareToIgnoreCase(end) > 0) {
             return subSet(pos.getLeft(), start, end);
         }
+        //recursive call to continue traversal
         return subSet(pos.getLeft(), start, end) + pos.getSongName() + " by: " + pos.getArtistName() + "\n" + subSet(pos.getRight(), start, end);
     }
 
@@ -86,6 +93,7 @@ class Song {
         this.rightChild = null;
     }
 
+    //adds song streams to object
     public void addStreams(int streams) {
         this.songStreams += streams;
         this.songCount++;
@@ -96,13 +104,17 @@ class Song {
         artistCount++;
     }
 
+    //used to calculate average streams,
     public int songAverage() {
         return this.songStreams / this.songCount;
     }
 
+    //calculates average streams for artist
     public int artistAverage() {
         return this.artistStreams / this.artistCount;
     }
+
+    //checks if song nodes have the same artist
     public void checkArtist(Song song) {
         //if artist is the same, adds songs streams of the current object to song and vice versa
         if (this.artistName.equals(song.getArtistName())) {
@@ -142,7 +154,7 @@ class Song {
         return this.songStreams;
     }
 
-    //added to help clean up code
+    //added to help clean up code; dont need to repeat long statement inside 
     public int compareTo(Song song) {
         return this.songName.compareToIgnoreCase(song.getSongName());
     }
